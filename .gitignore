@@ -1,0 +1,21 @@
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.env
+.streamlit/secrets.toml
+
+# Local dataset
+Womens Clothing E-Commerce Reviews.csv
+data/*.csv
+
+# Generated outputs and model artifacts
+outputs/*
+!outputs/.gitkeep
+models/*
+!models/.gitkeep
+
+# IDE / OS
+.vscode/
+.idea/
+.DS_Store
