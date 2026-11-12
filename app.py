@@ -187,50 +187,54 @@ def get_recommendation_model():
 # REVIEW PREPROCESSING
 # ---------------------------------------------------------
 
+
 def preprocess_for_prediction(text):
     """
-    Preprocess a customer review using the same approach
-    as the numerical preprocessing pipeline.
+    Clean customer reviews without requiring NLTK downloads.
     """
 
-    import nltk
+    import re
 
-    from nltk.corpus import stopwords, words
-    from nltk.tokenize import word_tokenize
+    # Basic English stopword list
+    stop_words = {
+        "a", "an", "the", "and", "or", "but", "if",
+        "is", "are", "was", "were", "am", "be", "been",
+        "being", "have", "has", "had", "do", "does",
+        "did", "of", "at", "by", "for", "with", "about",
+        "against", "between", "into", "through", "during",
+        "before", "after", "above", "below", "to", "from",
+        "up", "down", "in", "out", "on", "off", "over",
+        "under", "again", "further", "then", "once",
+        "here", "there", "when", "where", "why", "how",
+        "all", "any", "both", "each", "few", "more",
+        "most", "other", "some", "such", "no", "nor",
+        "not", "only", "own", "same", "so", "than",
+        "too", "very", "can", "will", "just", "should",
+        "now", "i", "me", "my", "myself", "we", "our",
+        "ours", "you", "your", "yours", "he", "him",
+        "his", "she", "her", "it", "its", "they",
+        "them", "their", "what", "which", "who", "whom",
+        "this", "that", "these", "those", "as", "while",
+        "because", "until", "against", "also"
+    }
 
-    try:
-
-        ensure_nltk_resources()
-
-        stop_words = set(stopwords.words("english"))
-        english_vocab = set(words.words())
-
-        tokens = word_tokenize(text)
-
-    except Exception as error:
-
-        st.error(f"NLTK preprocessing failed: {error}")
-
+    if not isinstance(text, str):
         return ""
 
-    tokens = [word.lower() for word in tokens]
+    # Convert to lowercase
+    text = text.lower()
 
+    # Extract alphabetic words
+    tokens = re.findall(r"\b[a-z]+\b", text)
+
+    # Remove stopwords and short words
     tokens = [
         word for word in tokens
-        if word not in stop_words
-    ]
-
-    tokens = [
-        word for word in tokens
-        if word.isalpha()
-    ]
-
-    tokens = [
-        word for word in tokens
-        if word in english_vocab and len(word) > 2
+        if word not in stop_words and len(word) > 2
     ]
 
     return " ".join(tokens)
+
 
 
 # ---------------------------------------------------------
